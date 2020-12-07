@@ -21,7 +21,7 @@ Create a merged dataset which retains the weight of the individual, along with t
 
 Then run the notebook, it will produce a highly accurate chained random forest model of the biometrics
 
-The notebook takes the dataset, and uses the weights associated with the 16,000 individuals to upsample to 100,000.
+The notebook takes the dataset, and uses the weights associated with the 16,000 individuals to upsample to 220,000.
 
 Then we identify the target variables, and build a chained random forest regressor model, and use it to predict our variables.
 
