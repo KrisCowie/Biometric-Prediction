@@ -20,8 +20,6 @@ Identify the datasets you need (APOB, BIOPRO, BMX, BPX, DEMO, GHB, GLU, HDL, TCH
 Create a merged dataset which retains the weight of the individual, along with the pertinent features.
 
 
-The notebook takes the dataset, and uses the weights associated with the 16,000 individuals to upsample to 220,000.
+The notebook takes the dataset, and uses the weights associated with the 16,000 individuals to upsample to 300,000.
 
-Then we identify the target variables, and build a chained random forest regressor model, and use it to predict our variables.
-
-We use Random Forest Regression as it takes into account the relationships between the features you want to predict - things like HDL and LDL, Apolipoprotein and LDL, etc carry inherent associations, which would be lost if you just did a series of models that predicted each of the features based on Age, Gender, Height, and Weight.
+Then we start building models! There's random forest regressors, and LightGBM (had to create a loop to do the multi output, as it doesn't natively support that function). 
