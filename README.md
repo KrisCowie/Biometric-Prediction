@@ -1,35 +1,34 @@
-# Biometric-Prediction
-Predicting biometrics from CDC NHANES data
+# Biometric Prediction
+Biometric predictions based on 12 years of CDC NHANES data:
 
-CDC NHANES data provides a complex survey sample of the non-institutionalized population of the United States every 2 years.
+Predicts: 
+- Waist Circumference 
+- Systolic / Diastolic blood pressure
+- HDL
+- LDL
+- Triglycerides
+- Serum glucose
+- Glycohemoglobin
+- Plasma glucose
+- Apolipoprotein
 
-Individuals go through a battery of lab tests for everything from LDL and HDL to Perchlorates, Pesticides, along with wide ranging demographic and body measurement data.
+From only 5 features:
+- Age, Gender, Height, and Weight
 
-If you wanted to predict biometrics like LDL, HDL, blood pressure / sugar, triglyercides, etc. just from an individuals age, gender, height, and weight, how would you go about it?
-Well, a little something like the chained random forest regressor model in this repo.
+Took a couple of different approaches to this problem - random forest regression was likely to be the best, but tested Tab Net Neural Networks, and some custom code to produce first a) tweak the hyperparameters of each feature for Light GBM, and then b) multiple output LightGBM, as LightGBM's implementation in Python doesn't support native multi-output
 
-First datasets are downloaded from the CDC's website:
-https://wwwn.cdc.gov/nchs/nhanes/Default.aspx
+Both of these produced good, but not great results, so the final model used a Random Forest Regression model, upsampling the initial dataset of 16,000 to ~500,000, based on the weights assigned to them in the complex survey method the CDC employed to gather the data in the first place.
 
-Each individual is given a weight (indicating the number of people they represent in the non-institutionalized population of the United States)
+These weights were immensely helpful to creating an accurate model as sort of meta-weights for the model
 
-This weight changes based on which tests they participated in (the fasting sub sample, for example, tested less people than they were able to get to respond to the demographic questionnaire, so there's different weights associated with these people).
+The final model / script are set to private, message me if you'd like to see more!
 
-Identify the datasets you need (APOB, BIOPRO, BMX, BPX, DEMO, GHB, GLU, HDL, TCHOl, and TRIGLY) for each year (in this case I used 2005-2016)
+Final script produces the model after preprocessing and upsampling the dataset, then the second script will take in a CSV called 'data.csv', and first calculate BMI, then run the model against it, predicting the 10 labels we want, followed by classifying each prediction, i.e.:
+BPSYAVG - Low, Normal, High, High Stage 2 blood pressure
+BPDIAVG - Low, Normal, High
+Glycohemoglobin - Normal, Prediabetic, Diabetic
 
-Create a merged dataset which retains the weight of the individual, along with the pertinent features.
-
-The dataset has already been cleaned and assembled previously, so it's got the pertinent weights for each individual, and has non necessary data points dropped.
-
-Using bayesian optimization, and hyper opt packages, we can loop over each iteration of the model, and select the best hyperparameters for predicting each biometric.
-
-Once the best hyperparams are discovered, we can create a model fitting loop which grabs the correct hyperparams from a dictionary for each loop, depending on which biometric we're prediciting.
-Put it all together, and you eventually save 10 models, one each for the labels we're looking for.
-
-Then we save each model with a unique name, and use them to make predictions on CDC NHANES data from 2017-2018, which the model hasn't seen before.
-
-Anndd that didn't work very well.
-Our Mean Absolute Error turned out to be pretty mediocore.
+Etc. You could work the problem as a classification problem, and likely have better 'accuracy', but I thought working it as a regression problem would allow more precise estimation of the biometrics
 
 So back to the drawing board! Think it might be pertinent to use a chained regressor which will take into account the correlations between predictor variables.
  
