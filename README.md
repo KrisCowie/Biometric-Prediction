@@ -30,5 +30,4 @@ Glycohemoglobin - Normal, Prediabetic, Diabetic
 
 Etc. You could work the problem as a classification problem, and likely have better 'accuracy', but I thought working it as a regression problem would allow more precise estimation of the biometrics
 
-So back to the drawing board! Think it might be pertinent to use a chained regressor which will take into account the correlations between predictor variables.
  
